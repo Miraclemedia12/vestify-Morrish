@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vestify – Register & Choose Your Path to Wealth</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #FFD700;
+            --gold-glow: #ffed4e;
+            --bg: #0e0516;
+            --dark: #09020f;
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 215, 0, 0.15);
+            --text: #ffffff;
+            --text-light: rgba(255, 255, 255, 0.8);
+            --gradient-gold: linear-gradient(90deg, rgba(207, 162, 53, 1) 0%, rgba(255, 255, 255, 1) 29%, rgba(207, 162, 53, 1) 67%, rgba(255, 255, 255, 1) 100%);
+            --transition: all 0.4s ease;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+        /* Floating Orbs Background */
+        .bg-orbs {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,0.15), transparent);
+            animation: float 25s infinite linear;
+            opacity: 0.35;
+        }
+        .orb:nth-child(1) { width: 280px; height: 280px; top: 15%; left: 10%; animation-duration: 28s; }
+        .orb:nth-child(2) { width: 450px; height: 450px; bottom: 20%; right: 15%; animation-duration: 40s; }
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(120px, -120px) rotate(360deg); }
+        }
+        .app-container { flex: 1; display: flex; flex-direction: column; position: relative; }
+        
+        /* Header */
+        .app-header {
+            padding: 15px 20px;
+            background: rgba(14,5,22,0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-btn {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .back-btn:hover { background: rgba(255,215,0,0.1); transform: scale(1.08); }
+        .page-title { font-size: 1.4rem; font-weight: 700; color: var(--gold); }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-section { text-align: center; margin-bottom: 30px; }
+        .logo-image { width: 140px; filter: drop-shadow(0 0 15px rgba(255,215,0,0.4)); }
+        
+        /* Registration Card */
+        .registration-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 35px 25px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 0 40px rgba(255,215,0,0.15);
+        }
+        .registration-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .registration-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        /* Package Selection */
+        .package-selection {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+        .package-option {
+            background: rgba(255,255,255,0.03);
+            border: 2px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            display: block;
+        }
+        .package-option:hover, .package-option.selected {
+            border-color: #22c55e;
+            box-shadow: 0 0 30px rgba(34,197,94,0.25);
+            transform: translateY(-4px);
+        }
+        .package-option input[type="radio"] { display: none; }
+        .package-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .package-name { font-size: 1.4rem; font-weight: 700; color: var(--gold); }
+        .package-price { font-size: 1.6rem; font-weight: 800; color: var(--gold-glow); }
+        .package-features { font-size: 0.95rem; color: var(--text-light); line-height: 1.5; }
+        .check-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            color: #22c55e;
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .package-option.selected .check-icon {
+            opacity: 1;
+        }
+        
+        /* Form */
+        .form-group { margin-bottom: 22px; }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--gold);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(255,215,0,0.2);
+            background: rgba(255,255,255,0.08);
+        }
+        .form-control::placeholder { color: rgba(255,255,255,0.4); }
+        
+        /* Register Button */
+        .register-btn {
+            background: var(--gradient-gold);
+            color: #000;
+            border: none;
+            padding: 16px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 0 30px rgba(255,215,0,0.5);
+            transition: var(--transition);
+        }
+        .register-btn:hover {
+            box-shadow: 0 0 50px rgba(255,215,0,0.8);
+            transform: translateY(-3px);
+        }
+        .register-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(14,5,22,0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+        .nav-item {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.8rem;
+            text-align: center;
+            transition: var(--transition);
+        }
+        .nav-item i { font-size: 1.4rem; margin-bottom: 4px; }
+        .nav-item:hover { color: var(--gold); }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(14,5,22,0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 14px 24px;
+            color: var(--text);
+            font-weight: 500;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 90%;
+        }
+        .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .toast.success { border-left: 5px solid var(--gold); }
+        .toast.error { border-left: 5px solid #ff4d4d; }
+        
+        @media (max-width: 480px) {
+            .registration-card { padding: 25px 18px; }
+            .registration-title { font-size: 1.7rem; }
+        }
+    </style>
+
+    <!-- Firebase App & Firestore Compatibility SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="bg-orbs">
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div style="display:flex; align-items:center; gap:15px;">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+            <h1 class="page-title">Register</h1>
+        </div>
+        <i class="fas fa-bell" style="font-size:1.3rem; color:var(--gold);"></i>
+    </header>
+
+    <!-- Main -->
+    <main class="main-content">
+        <div class="logo-section">
+            <img src="logo.png" alt="Vestify Logo" class="logo-image">
+        </div>
+
+        <div class="registration-card">
+            <h2 class="registration-title">Join Vestify</h2> 
+            <p class="registration-subtitle">Choose your package & start building wealth today</p>
+
+            <!-- Package Selection -->
+            <div class="package-selection">
+                <label class="package-option selected" for="elite">
+                    <input type="radio" id="elite" name="package" value="Elite" data-price="15000" data-bonus="20000" checked>
+                    <div class="package-header">
+                        <span class="package-name">ELITE</span>
+                        <span class="package-price">₦15,000</span>
+                    </div>
+                    <div class="package-features">
+                        ₦20,000 Activation Bonus • Up to ₦40k daily • Loans ₦50k–₦500k • 24/7 Withdrawals
+                    </div>
+                    <i class="fas fa-check-circle check-icon"></i>
+                </label>
+
+                <label class="package-option" for="supremo">
+                    <input type="radio" id="supremo" name="package" value="Supremo" data-price="30000" data-bonus="50000">
+                    <div class="package-header">
+                        <span class="package-name">SUPREMO</span>
+                        <span class="package-price">₦30,000</span>
+                    </div>
+                    <div class="package-features">
+                        ₦50,000 Bonus + ₦200k Monthly • Up to ₦50k daily • Free Netflix • Loans ₦200k–₦1M
+                    </div>
+                    <i class="fas fa-check-circle check-icon"></i>
+                </label>
+
+                <label class="package-option" for="legend">
+                    <input type="radio" id="legend" name="package" value="Legend" data-price="55000" data-bonus="200000">
+                    <div class="package-header">
+                        <span class="package-name">LEGEND</span>
+                        <span class="package-price">₦55,000</span>
+                    </div>
+                    <div class="package-features">
+                        ₦200,000 Instant + ₦500k Weekly • Up to ₦100k+ daily • Loans ₦500k–₦5M • Top Rewards
+                    </div>
+                    <i class="fas fa-check-circle check-icon"></i>
+                </label>
+            </div>
+
+            <!-- Form -->
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Create a strong password" required>
+                </div>
+
+                <button type="submit" class="register-btn" id="registerBtn">
+                    <i class="fas fa-user-plus"></i> Register & Start Earning
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Registration successful!</span>
+    </div>
+
+    <script>
+        // Your Firebase Configuration (provided)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDB-5gCKldlrQVIfE7raHWRAVGar8BijCw",
+            authDomain: "vestify-morrish.firebaseapp.com",
+            projectId: "vestify-morrish",
+            storageBucket: "vestify-morrish.firebasestorage.app",
+            messagingSenderId: "312167700760",
+            appId: "1:312167700760:web:3dd4521601ca370d8ba66d",
+            measurementId: "G-FC6L1N4T6H"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Package Selection Highlight & System Synchronization
+        const packageOptions = document.querySelectorAll('.package-option');
+        const packageRadios = document.querySelectorAll('input[name="package"]');
+
+        packageRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                packageOptions.forEach(opt => opt.classList.remove('selected'));
+                if (radio.checked) {
+                    const parentLabel = radio.closest('.package-option');
+                    if (parentLabel) {
+                        parentLabel.classList.add('selected');
+                    }
+                }
+            });
+        });
+
+        // Toast Notification System
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const message = document.getElementById('toastMessage');
+            const icon = toast.querySelector('i');
+            message.textContent = msg;
+            toast.className = `toast ${type} show`;
+            icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        // Form Submit handler
+        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const registerBtn = document.getElementById('registerBtn');
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!fullName || !email || !username || !password) {
+                showToast('Please complete all fields', 'error');
+                return;
+            }
+            if (password.length < 6) {
+                showToast('Password must be at least 6 characters', 'error');
+                return;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showToast('Invalid email format', 'error');
+                return;
+            }
+
+            // Get selected package details
+            const selectedRadio = document.querySelector('input[name="package"]:checked');
+            if (!selectedRadio) {
+                showToast('Please choose a package option', 'error');
+                return;
+            }
+
+            const packageName = selectedRadio.value;
+            const packagePrice = Number(selectedRadio.dataset.price);
+            const packageBonus = Number(selectedRadio.dataset.bonus);
+
+            // Construct user payload
+            const userData = {
+                fullName,
+                email,
+                username,
+                password, // Note: For secure production systems, handle password auth via Firebase Auth
+                package: packageName,
+                packagePrice, 
+                packageBonus,
+                isPaid: false, // track whether payment has been approved yet
+                registrationDate: new Date().toISOString()
+            };
+
+            // Disable button during network request
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                // Save user data to Firestore under "users" collection with the email as document ID
+                await db.collection("users").doc(email).set(userData);
+
+                // Store a copy in localStorage for immediate local dashboard use
+                localStorage.setItem('vestifyUser', JSON.stringify(userData));
+                
+                showToast(`Welcome to Vestify ${packageName}! Redirecting to dashboard...`, 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2200);
+
+            } catch (error) {
+                console.error("Firebase Database Error: ", error);
+                showToast("Connection error. Please try again.", "error");
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Register & Start Earning';
+            }
+        });
+    </script>
+</body>
+</html>
