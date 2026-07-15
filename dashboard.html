@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vestify – Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #FFD700;
+            --gold-glow: #ffed4e;
+            --bg: #06020b;
+            --dark: #030106;
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 215, 0, 0.12);
+            --text: #ffffff;
+            --text-light: rgba(255, 255, 255, 0.70);
+            --gradient-gold: linear-gradient(135deg, #CF007F 0%, #FFD700 50%, #CF007F 100%);
+            --gradient-gold-dark: linear-gradient(90deg, #b08d00 0%, #ffd700 50%, #b08d00 100%);
+            --success: #00ff9d;
+            --warning: #ffcc00;
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Floating Premium Ambient Orbs */
+        .bg-orbs {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.08), transparent 70%);
+            animation: float 25s infinite alternate ease-in-out;
+            opacity: 0.4;
+        }
+        .orb:nth-child(1) { width: 400px; height: 400px; top: -5%; left: -10%; animation-duration: 20s; }
+        .orb:nth-child(2) { width: 550px; height: 550px; bottom: -10%; right: -15%; animation-duration: 30s; }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(60px, -60px) scale(1.15); }
+        }
+
+        .app-container { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            padding-bottom: 100px; 
+        }
+
+        /* Header */
+        .app-header {
+            padding: 20px 24px;
+            background: rgba(6, 2, 11, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .user-avatar {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-gold-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: var(--transition);
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.05) rotate(5deg);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+        }
+
+        .user-info h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 2px;
+            letter-spacing: -0.5px;
+        }
+        .user-info p {
+            font-size: 0.85rem;
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .menu-btn, .notification-btn {
+            width: 44px; height: 44px;
+            border-radius: 14px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .menu-btn:hover, .notification-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+        .notification-btn { position: relative; }
+        .notification-badge {
+            position: absolute;
+            top: 6px; right: 6px;
+            width: 8px; height: 8px;
+            background: #ff3b30;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff3b30;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 24px 20px;
+        }
+
+        /* Premium Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 30px 24px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.05), transparent);
+            transform: skewX(-25deg);
+            transition: 0.75s;
+        }
+        .balance-card:hover::before {
+            left: 150%;
+        }
+
+        .balance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .balance-title {
+            font-size: 1rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        .balance-title i {
+            color: var(--gold);
+        }
+        #balanceEye {
+            cursor: pointer;
+            color: var(--text-light);
+            padding: 4px 8px;
+            transition: var(--transition);
+        }
+        #balanceEye:hover {
+            color: var(--gold);
+        }
+        .balance-amount {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: -1px;
+            margin: 8px 0;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+        .package-info {
+            font-size: 0.95rem;
+            color: #ffffff;
+            margin-bottom: 24px;
+            font-weight: 500;
+            background: rgba(255, 215, 0, 0.08);
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .action-btn {
+            background: var(--gradient-gold-dark);
+            color: #000;
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.25);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 12px 0;
+            text-decoration: none;
+        }
+        .action-btn:hover {
+            box-shadow: 0 12px 30px rgba(255, 215, 0, 0.45);
+            transform: translateY(-2px);
+        }
+        .activate-btn {
+            background: transparent;
+            border: 2px solid var(--warning);
+            color: var(--warning);
+            padding: 14px;
+            border-radius: 16px;
+            font-weight: 600;
+            box-shadow: none;
+        }
+        .activate-btn:hover {
+            background: rgba(255, 204, 0, 0.08);
+            color: #fff;
+            border-color: #fff;
+        }
+
+        /* Sections Header */
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 35px 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .section-title i {
+            color: var(--gold);
+        }
+
+        /* Modernized Grid System */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        .action-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 18px 8px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .action-card:hover {
+            background: rgba(255, 215, 0, 0.05);
+            border-color: var(--gold);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.15);
+        }
+        .action-icon {
+            font-size: 1.6rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+        .action-card:hover .action-icon {
+            transform: scale(1.15);
+        }
+        .action-title {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        /* Activity Stats Card */
+        .activity-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+        .activity-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 16px;
+            padding: 16px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* Recent Transactions */
+        .transactions-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            color: var(--gold);
+            opacity: 0.5;
+        }
+
+        /* Premium Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(6, 2, 11, 0.94);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 24px;
+            z-index: 1000;
+        }
+        .nav-item {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.75rem;
+            text-align: center;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .nav-item i { 
+            font-size: 1.3rem; 
+            transition: var(--transition);
+        }
+        .nav-item.active, .nav-item:hover { 
+            color: var(--gold); 
+        }
+        .nav-item.active i {
+            transform: translateY(-2px);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Elite Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 110px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(6, 2, 11, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--gold);
+            border-radius: 50px;
+            padding: 16px 32px;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.9rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.2);
+            white-space: nowrap;
+        }
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast i {
+            color: var(--gold);
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 480px) {
+            .quick-actions {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+            }
+            .action-card {
+                padding: 14px 4px;
+            }
+            .action-icon {
+                font-size: 1.4rem;
+            }
+            .action-title {
+                font-size: 0.65rem;
+            }
+            .balance-amount { font-size: 2.1rem; }
+            .section-title { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-orbs">
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div style="display:flex; align-items:center; gap:14px;">
+                <div class="user-avatar" id="userInitial">V</div>
+                <div class="user-info">
+                    <h1 id="greeting">Welcome back</h1>
+                    <p id="usernameDisplay">@user</p>
+                </div>
+            </div>
+            <div style="display:flex; gap:12px;">
+                <div class="notification-btn"><i class="fas fa-bell"></i><div class="notification-badge"></div></div>
+                <div class="menu-btn"><i class="fas fa-bars"></i></div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Balance Card -->
+            <div class="balance-card">
+                <div class="balance-header">
+                    <div class="balance-title">
+                        <i class="fas fa-wallet"></i> Vestify Balance
+                    </div>
+                    <div id="balanceEye"><i class="fas fa-eye"></i></div>
+                </div>
+                <div class="balance-amount" id="packageBal">₦0.00</div>
+                <div class="package-info" id="packageDisplay">Package: —</div>
+
+                <a href="payment.html" class="action-btn" id="claimBtn">
+                    <i class="fas fa-gift"></i> Claim Daily Earnings
+                </a>
+                <button class="action-btn activate-btn" id="activateBtn">
+                    <i class="fas fa-rocket"></i> Withdraw Welcome Bonus
+                </button>
+                <p style="text-align:center; font-size:0.8rem; color:var(--text-light); margin-top:12px; font-weight: 500;">
+                    Instant 24/7 withdrawals after activation
+                </p>
+            </div>
+
+            <!-- Quick Actions -->
+            <h2 class="section-title"><i class="fas fa-bolt"></i> Quick Actions</h2>
+            <div class="quick-actions">
+                <div class="action-card"><div class="action-icon"><i class="fas fa-gamepad"></i></div><div class="action-title">Play & Stake</div></div>
+                <div class="action-card"><div class="action-icon"><i class="fas fa-video"></i></div><div class="action-title">Watch & Earn</div></div>
+                <div class="action-card"><div class="action-icon"><i class="fas fa-comments"></i></div><div class="action-title">Chat & Earn</div></div>
+                <div class="action-card"><div class="action-icon"><i class="fas fa-users"></i></div><div class="action-title">Refer & Earn</div></div>
+                <div class="action-card"><div class="action-icon"><i class="fas fa-hand-holding-usd"></i></div><div class="action-title">Loans</div></div>
+                <div class="action-card"><div class="action-icon"><i class="fas fa-chart-line"></i></div><div class="action-title">Earnings</div></div>
+                <div class="action-card"><div class="action-icon"><i class="fas fa-trophy"></i></div><div class="action-title">Streak Bonus</div></div>
+                <div class="action-card"><div class="action-icon"><i class="fas fa-broadcast-tower"></i></div><div class="action-title">Go Live</div></div>
+            </div>
+
+            <!-- Today's Activity -->
+            <div class="activity-card">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> Today's Activity</h2>
+                <div class="activity-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="earnedToday">₦0</div>
+                        <div class="stat-label">Earned Today</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="tasksDone">0/10</div>
+                        <div class="stat-label">Tasks Done</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0h 0m</div>
+                        <div class="stat-label">Active Time</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="transactions-card">
+                <h2 class="section-title"><i class="fas fa-exchange-alt"></i> Recent Transactions</h2>
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fas fa-receipt"></i></div>
+                    <p style="font-weight: 600;">No transactions yet</p>
+                    <p style="font-size:0.8rem; margin-top:8px;">Complete tasks or claim bonuses to see activity here</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="#" class="nav-item"><i class="fas fa-coins"></i><span>Earn</span></a>
+            <a href="#" class="nav-item"><i class="fas fa-wallet"></i><span>Wallet</span></a>
+            <a href="#" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+        </nav>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Initialize Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDB-5gCKldlrQVIfE7raHWRAVGar8BijCw",
+            authDomain: "vestify-morrish.firebaseapp.com",
+            projectId: "vestify-morrish",
+            storageBucket: "vestify-morrish.firebasestorage.app",
+            messagingSenderId: "312167700760",
+            appId: "1:312167700760:web:3dd4521601ca370d8ba66d",
+            measurementId: "G-FC6L1N4T6H"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Reactive UI State variables
+        let rawBalanceValue = 0;
+        let visible = true;
+
+        // Simple elegant toast function
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3200);
+        }
+
+        // Apply LocalStorage instantly to avoid visual lags during page load
+        function loadFromLocalStorage() {
+            const userData = JSON.parse(localStorage.getItem('vestifyUser') || '{}');
+            const username = userData.username || 'Guest';
+            const packageName = userData.package || 'Not Selected';
+            const packagePrice = userData.packagePrice ? `₦${Number(userData.packagePrice).toLocaleString()}` : '—'; 
+            rawBalanceValue = userData.packageBonus || 0;
+
+            updateDOM(username, packageName, packagePrice, rawBalanceValue);
+        }
+
+        // Central DOM Renderer
+        function updateDOM(username, packageName, packagePrice, balance, earnedToday = 0, tasksDone = "0/10") {
+            document.getElementById('usernameDisplay').textContent = `@${username.toLowerCase().replace(/\s+/g, '')}`;
+            document.getElementById('userInitial').textContent = username.charAt(0).toUpperCase();
+            document.getElementById('greeting').textContent = `Hey ${username.split(' ')[0] || 'there'}`;
+            document.getElementById('packageDisplay').textContent = `Package: ${packageName} (${packagePrice})`;
+            
+            // Handle masked balance logic correctly
+            if (visible) {
+                document.getElementById('packageBal').textContent = `₦${Number(balance).toLocaleString()}`;
+            } else {
+                document.getElementById('packageBal').textContent = '••••••';
+            }
+
+            document.getElementById('earnedToday').textContent = `₦${Number(earnedToday).toLocaleString()}`;
+            document.getElementById('tasksDone').textContent = tasksDone;
+        }
+
+        // Live Real-Time database listener from Firebase
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // Read continuous live updates from user document matching register structural norms
+                db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    if (doc.exists) {
+                        const firebaseData = doc.data();
+                        
+                        // Local storage sync backup
+                        localStorage.setItem('vestifyUser', JSON.stringify({
+                            username: firebaseData.username || firebaseData.fullName || 'User',
+                            package: firebaseData.package || 'Not Selected',
+                            packagePrice: firebaseData.packagePrice || 0,
+                            packageBonus: firebaseData.balance || firebaseData.packageBonus || 0
+                        }));
+
+                        rawBalanceValue = firebaseData.balance || firebaseData.packageBonus || 0;
+                        const packagePriceFormatted = firebaseData.packagePrice ? `₦${Number(firebaseData.packagePrice).toLocaleString()}` : '—';
+
+                        updateDOM(
+                            firebaseData.username || firebaseData.fullName || 'User',
+                            firebaseData.package || 'Not Selected',
+                            packagePriceFormatted,
+                            rawBalanceValue,
+                            firebaseData.earnedToday || 0,
+                            firebaseData.tasksCompleted ? `${firebaseData.tasksCompleted}/10` : '0/10'
+                        );
+                    } else {
+                        // Document missing inside Firestore database collection fallback
+                        loadFromLocalStorage();
+                    }
+                }, error => {
+                    console.error("Firestore loading error: ", error);
+                    loadFromLocalStorage();
+                });
+            } else {
+                // Clear session or verify local context state
+                loadFromLocalStorage();
+                showToast("Please register or login to activate features.");
+                setTimeout(() => {
+                    window.location.href = 'register.html'; // Direct to your system registry path
+                }, 4000);
+            }
+        });
+
+        // Initialize state on page load from fast Cache
+        loadFromLocalStorage();
+
+        // Eye balance mask-unmask system
+        document.getElementById('balanceEye').addEventListener('click', () => {
+            visible = !visible;
+            if (visible) {
+                document.getElementById('packageBal').textContent = `₦${Number(rawBalanceValue).toLocaleString()}`;
+                document.getElementById('balanceEye').innerHTML = '<i class="fas fa-eye"></i>';
+            } else {
+                document.getElementById('packageBal').textContent = '••••••';
+                document.getElementById('balanceEye').innerHTML = '<i class="fas fa-eye-slash"></i>';
+            }
+        });
+
+        // Action Interactions
+        document.getElementById('claimBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast("Syncing database... Checking daily task milestones");
+            setTimeout(() => {
+                window.location.href = 'payment.html';
+            }, 1200);
+        });
+
+        document.getElementById('activateBtn').addEventListener('click', () => {
+            showToast("Transferring bonus... Redirecting to secure portal");
+            setTimeout(() => { 
+                window.location.href = 'payment.html'; 
+            }, 1200);
+        });
+
+        // Loop all custom cards
+        document.querySelectorAll('.action-card').forEach(card => {
+            card.addEventListener('click', () => {
+                showToast(`Opening ${card.querySelector('.action-title').textContent}...`);
+            });
+        });
+    </script>
+</body>
+</html>
