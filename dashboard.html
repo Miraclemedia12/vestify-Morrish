@@ -739,9 +739,12 @@
             if (type === "claim") {
                 modalTitle.textContent = "Daily Claims Locked";
                 modalDesc.textContent = "You need to activate your premium pack before claiming your daily compounding earnings.";
-            } else {
+            } else if (type === "withdraw") {
                 modalTitle.textContent = "Withdraw Bonus";
                 modalDesc.textContent = "Ready to withdraw your sign-up welcome bonus? Complete your profile verification to unlock immediate instant payouts.";
+            } else {
+                modalTitle.textContent = `${type} Locked`;
+                modalDesc.textContent = `To unlock the premium ${type} system, please complete your secure account activation via Flutterwave.`;
             }
 
             // Checks the user's mapped plan directly
@@ -788,11 +791,11 @@
             }
         });
 
-        // Quick Actions (Interactions)
+        // Quick Actions (Interactions updated to open dynamic modal check based on Feature)
         document.querySelectorAll('.action-card').forEach(card => {
             card.addEventListener('click', () => {
                 const title = card.querySelector('.action-title').textContent;
-                showToast(`Launching ${title} feature...`);
+                openActivationModal(title);
             });
         });
 
