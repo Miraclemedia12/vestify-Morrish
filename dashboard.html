@@ -6,26 +6,22 @@
     <title>Vestify – Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --gold: #FFD700;
             --gold-glow: #ffed4e;
-            --bg: #06020b;
-            --dark: #030106;
-            --glass-bg: rgba(255, 255, 255, 0.02);
-            --glass-border: rgba(255, 215, 0, 0.12);
+            --bg: #07020d;
+            --dark: #040108;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 215, 0, 0.15);
             --text: #ffffff;
-            --text-light: rgba(255, 255, 255, 0.70);
-            --gradient-gold: linear-gradient(135deg, #CF007F 0%, #FFD700 50%, #CF007F 100%);
-            --gradient-gold-dark: linear-gradient(90deg, #b08d00 0%, #ffd700 50%, #b08d00 100%);
+            --text-light: rgba(255, 255, 255, 0.75);
+            --gradient-gold: linear-gradient(90deg, rgba(207, 162, 53, 1) 0%, rgba(255, 255, 255, 1) 29%, rgba(207, 162, 53, 1) 67%, rgba(255, 255, 255, 1) 100%);
             --success: #00ff9d;
             --warning: #ffcc00;
-            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
         body {
             font-family: 'Poppins', sans-serif;
             background: var(--bg);
@@ -36,8 +32,7 @@
             overflow-x: hidden;
             position: relative;
         }
-
-        /* Floating Premium Ambient Orbs */
+        /* Floating Orbs */
         .bg-orbs {
             position: fixed;
             inset: 0;
@@ -47,193 +42,145 @@
         .orb {
             position: absolute;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.08), transparent 70%);
-            animation: float 25s infinite alternate ease-in-out;
-            opacity: 0.4;
+            background: radial-gradient(circle, rgba(255,215,0,0.1), transparent);
+            animation: float 35s infinite linear;
+            opacity: 0.25;
         }
-        .orb:nth-child(1) { width: 400px; height: 400px; top: -5%; left: -10%; animation-duration: 20s; }
-        .orb:nth-child(2) { width: 550px; height: 550px; bottom: -10%; right: -15%; animation-duration: 30s; }
-        
+        .orb:nth-child(1) { width: 400px; height: 400px; top: -5%; left: -10%; animation-duration: 30s; }
+        .orb:nth-child(2) { width: 500px; height: 500px; bottom: -10%; right: -10%; animation-duration: 40s; }
         @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(60px, -60px) scale(1.15); }
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(80px, -50px) rotate(180deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
         }
-
-        .app-container { 
-            flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            padding-bottom: 100px; 
-        }
-
+        .app-container { flex: 1; display: flex; flex-direction: column; padding-bottom: 90px; }
+        
         /* Header */
         .app-header {
-            padding: 20px 24px;
-            background: rgba(6, 2, 11, 0.85);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            padding: 20px;
+            background: rgba(7,2,13,0.95);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
-        
         .user-avatar {
-            width: 50px; height: 50px;
+            width: 48px; height: 48px;
             border-radius: 50%;
-            background: var(--gradient-gold-dark);
+            background: var(--gradient-gold);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            font-weight: 800;
+            font-size: 1.3rem;
+            font-weight: 700;
             color: #000;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            transition: var(--transition);
+            box-shadow: 0 0 15px rgba(255,215,0,0.4);
         }
-        
-        .user-avatar:hover {
-            transform: scale(1.05) rotate(5deg);
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
-        }
-
         .user-info h1 {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 2px;
-            letter-spacing: -0.5px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 3px;
         }
         .user-info p {
-            font-size: 0.85rem;
-            color: var(--gold);
-            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-light);
         }
-
         .menu-btn, .notification-btn {
             width: 44px; height: 44px;
-            border-radius: 14px;
+            border-radius: 50%;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--gold);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             cursor: pointer;
             transition: var(--transition);
         }
         .menu-btn:hover, .notification-btn:hover {
-            background: rgba(255, 215, 0, 0.1);
-            border-color: var(--gold);
-            transform: translateY(-2px);
+            background: rgba(255,215,0,0.12);
+            transform: scale(1.08);
         }
         .notification-btn { position: relative; }
         .notification-badge {
             position: absolute;
-            top: 6px; right: 6px;
-            width: 8px; height: 8px;
-            background: #ff3b30;
+            top: 4px; right: 4px;
+            width: 10px; height: 10px;
+            background: #ff4d4d;
             border-radius: 50%;
-            box-shadow: 0 0 10px #ff3b30;
+            border: 2px solid var(--dark);
         }
-
         /* Main Content */
         .main-content {
             flex: 1;
             padding: 24px 20px;
+            overflow-y: auto;
         }
-
-        /* Premium Balance Card */
+        /* Balance Card */
         .balance-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 30px 24px;
+            border-radius: 24px;
+            padding: 28px 24px;
             margin-bottom: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 35px rgba(255,215,0,0.1);
             position: relative;
             overflow: hidden;
         }
-        
         .balance-card::before {
             content: '';
             position: absolute;
-            top: 0; left: -100%;
-            width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.05), transparent);
-            transform: skewX(-25deg);
-            transition: 0.75s;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,215,0,0.05) 0%, transparent 70%);
+            pointer-events: none;
         }
-        .balance-card:hover::before {
-            left: 150%;
-        }
-
         .balance-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
         .balance-title {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-light);
             display: flex;
             align-items: center;
             gap: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-        .balance-title i {
-            color: var(--gold);
-        }
-        #balanceEye {
-            cursor: pointer;
-            color: var(--text-light);
-            padding: 4px 8px;
-            transition: var(--transition);
-        }
-        #balanceEye:hover {
-            color: var(--gold);
         }
         .balance-amount {
-            font-size: 2.6rem;
+            font-size: 2.8rem;
             font-weight: 800;
             color: var(--gold);
-            letter-spacing: -1px;
-            margin: 8px 0;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            margin: 10px 0;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
         }
         .package-info {
-            font-size: 0.95rem;
-            color: #ffffff;
-            margin-bottom: 24px;
-            font-weight: 500;
-            background: rgba(255, 215, 0, 0.08);
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            font-size: 1.1rem;
+            color: var(--gold-glow);
+            margin-bottom: 20px;
+            font-weight: 600;
         }
-
         .action-btn {
-            background: var(--gradient-gold-dark);
+            background: var(--gradient-gold);
             color: #000;
             border: none;
             padding: 16px;
-            border-radius: 16px;
-            font-size: 1rem;
+            border-radius: 50px;
+            font-size: 1.05rem;
             font-weight: 700;
             width: 100%;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.25);
+            box-shadow: 0 0 30px rgba(255,215,0,0.4);
             transition: var(--transition);
             display: flex;
             align-items: center;
@@ -243,83 +190,67 @@
             text-decoration: none;
         }
         .action-btn:hover {
-            box-shadow: 0 12px 30px rgba(255, 215, 0, 0.45);
-            transform: translateY(-2px);
+            box-shadow: 0 0 45px rgba(255,215,0,0.6);
+            transform: translateY(-3px);
         }
         .activate-btn {
             background: transparent;
             border: 2px solid var(--warning);
             color: var(--warning);
             padding: 14px;
-            border-radius: 16px;
+            border-radius: 50px;
             font-weight: 600;
-            box-shadow: none;
+            animation: pulse-border 2s infinite;
         }
         .activate-btn:hover {
-            background: rgba(255, 204, 0, 0.08);
-            color: #fff;
-            border-color: #fff;
+            background: rgba(255,204,0,0.12);
         }
-
-        /* Sections Header */
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 204, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
+        }
+        /* Sections */
         .section-title {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--gold);
             margin: 35px 0 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            gap: 10px;
         }
-        .section-title i {
-            color: var(--gold);
-        }
-
-        /* Modernized Grid System */
         .quick-actions {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 16px;
             margin-bottom: 30px;
         }
         .action-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 18px 8px;
+            padding: 16px 10px;
             text-align: center;
             transition: var(--transition);
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
         .action-card:hover {
-            background: rgba(255, 215, 0, 0.05);
             border-color: var(--gold);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.15);
+            transform: translateY(-6px);
+            box-shadow: 0 10px 25px rgba(255,215,0,0.15);
+            background: rgba(255, 215, 0, 0.04);
         }
         .action-icon {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             color: var(--gold);
-            margin-bottom: 10px;
-            transition: var(--transition);
-        }
-        .action-card:hover .action-icon {
-            transform: scale(1.15);
+            margin-bottom: 8px;
         }
         .action-title {
-            font-size: 0.75rem;
+            font-size: 0.9rem;
             color: var(--text-light);
-            font-weight: 600;
-            line-height: 1.2;
         }
-
-        /* Activity Stats Card */
+        /* Activity Stats */
         .activity-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -330,28 +261,26 @@
         .activity-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 16px;
         }
         .stat-item {
             text-align: center;
-            background: rgba(255, 255, 255, 0.01);
+            background: rgba(255,255,255,0.02);
             border-radius: 16px;
-            padding: 16px 8px;
+            padding: 16px 10px;
             border: 1px solid rgba(255, 255, 255, 0.03);
         }
         .stat-value {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: var(--gold);
         }
         .stat-label {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-light);
             margin-top: 6px;
-            font-weight: 500;
         }
-
-        /* Recent Transactions */
+        /* Transactions - Empty State */
         .transactions-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -360,111 +289,184 @@
         }
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
             color: var(--text-light);
         }
         .empty-icon {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 16px;
+            opacity: 0.6;
             color: var(--gold);
-            opacity: 0.5;
         }
-
-        /* Premium Bottom Nav */
+        /* Bottom Nav */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(6, 2, 11, 0.94);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            background: rgba(7,2,13,0.98);
+            backdrop-filter: blur(20px);
             border-top: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-around;
-            padding: 12px 0 24px;
+            padding: 12px 0;
             z-index: 1000;
         }
         .nav-item {
             color: var(--text-light);
             text-decoration: none;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             text-align: center;
             transition: var(--transition);
-            font-weight: 500;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
         }
-        .nav-item i { 
-            font-size: 1.3rem; 
-            transition: var(--transition);
-        }
-        .nav-item.active, .nav-item:hover { 
-            color: var(--gold); 
-        }
-        .nav-item.active i {
-            transform: translateY(-2px);
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-
-        /* Elite Toast Notification */
+        .nav-item i { font-size: 1.5rem; margin-bottom: 4px; }
+        .nav-item.active, .nav-item:hover { color: var(--gold); }
+        /* Toast */
         .toast {
             position: fixed;
-            bottom: 110px;
+            bottom: 100px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
-            background: rgba(6, 2, 11, 0.98);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(7,2,13,0.96);
+            backdrop-filter: blur(15px);
             border: 1px solid var(--gold);
             border-radius: 50px;
-            padding: 16px 32px;
+            padding: 14px 28px;
             color: var(--text);
-            font-weight: 600;
-            font-size: 0.9rem;
+            font-weight: 500;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 2000;
+            transition: var(--transition);
+            z-index: 4000;
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.2);
-            white-space: nowrap;
+            max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.2);
         }
         .toast.show {
             opacity: 1;
             visibility: visible;
             transform: translateX(-50%) translateY(0);
         }
-        .toast i {
+
+        /* Unique Payment Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 1, 8, 0.92);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-card {
+            background: linear-gradient(145deg, #0f061c, #07020d);
+            border: 1.5px solid var(--gold);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 400px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(255, 215, 0, 0.15);
+            transform: scale(0.8) translateY(30px);
+            transition: var(--transition);
+        }
+        .modal-overlay.active .modal-card {
+            transform: scale(1) translateY(0);
+        }
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px dashed var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
             color: var(--gold);
-            font-size: 1.1rem;
+            margin: 0 auto 20px;
+            animation: spin-slow 12s infinite linear;
+        }
+        @keyframes spin-slow {
+            100% { transform: rotate(360deg); }
+        }
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .modal-desc {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+        .modal-badge {
+            background: rgba(255,215,0,0.08);
+            border: 1px solid rgba(255,215,0,0.2);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gold-glow);
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .modal-btn-primary {
+            background: var(--gradient-gold);
+            color: #000;
+            font-weight: 700;
+            padding: 14px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(255,215,0,0.3);
+        }
+        .modal-btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 25px rgba(255,215,0,0.5);
+        }
+        .modal-btn-secondary {
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 12px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        .modal-btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
         }
 
         @media (max-width: 480px) {
-            .quick-actions {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 8px;
-            }
-            .action-card {
-                padding: 14px 4px;
-            }
-            .action-icon {
-                font-size: 1.4rem;
-            }
-            .action-title {
-                font-size: 0.65rem;
-            }
-            .balance-amount { font-size: 2.1rem; }
-            .section-title { font-size: 1.1rem; }
+            .balance-amount { font-size: 2.2rem; }
+            .section-title { font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
-
     <div class="bg-orbs">
         <div class="orb"></div>
         <div class="orb"></div>
@@ -473,14 +475,14 @@
     <div class="app-container">
         <!-- Header -->
         <header class="app-header">
-            <div style="display:flex; align-items:center; gap:14px;">
+            <div style="display:flex; align-items:center; gap:16px;">
                 <div class="user-avatar" id="userInitial">V</div>
                 <div class="user-info">
                     <h1 id="greeting">Welcome back</h1>
                     <p id="usernameDisplay">@user</p>
                 </div>
             </div>
-            <div style="display:flex; gap:12px;">
+            <div style="display:flex; gap:16px;">
                 <div class="notification-btn"><i class="fas fa-bell"></i><div class="notification-badge"></div></div>
                 <div class="menu-btn"><i class="fas fa-bars"></i></div>
             </div>
@@ -494,18 +496,18 @@
                     <div class="balance-title">
                         <i class="fas fa-wallet"></i> Vestify Balance
                     </div>
-                    <div id="balanceEye"><i class="fas fa-eye"></i></div>
+                    <div id="balanceEye" style="cursor: pointer;"><i class="fas fa-eye"></i></div>
                 </div>
                 <div class="balance-amount" id="packageBal">₦0.00</div>
-                <div class="package-info" id="packageDisplay">Package: —</div>
+                <div class="package-info" id="packageDisplay">Package: Detecting...</div>
 
-                <a href="payment.html" class="action-btn" id="claimBtn">
+                <button class="action-btn" id="claimBtn">
                     <i class="fas fa-gift"></i> Claim Daily Earnings
-                </a>
+                </button>
                 <button class="action-btn activate-btn" id="activateBtn">
                     <i class="fas fa-rocket"></i> Withdraw Welcome Bonus
                 </button>
-                <p style="text-align:center; font-size:0.8rem; color:var(--text-light); margin-top:12px; font-weight: 500;">
+                <p style="text-align:center; font-size:0.9rem; color:var(--text-light); margin-top:12px;">
                     Instant 24/7 withdrawals after activation
                 </p>
             </div>
@@ -520,7 +522,7 @@
                 <div class="action-card"><div class="action-icon"><i class="fas fa-hand-holding-usd"></i></div><div class="action-title">Loans</div></div>
                 <div class="action-card"><div class="action-icon"><i class="fas fa-chart-line"></i></div><div class="action-title">Earnings</div></div>
                 <div class="action-card"><div class="action-icon"><i class="fas fa-trophy"></i></div><div class="action-title">Streak Bonus</div></div>
-                <div class="action-card"><div class="action-icon"><i class="fas fa-broadcast-tower"></i></div><div class="action-title">Go Live</div></div>
+                <div class="action-card"><div class="action-icon"><i class="fas fa-circle-play"></i></div><div class="action-title">Go Live</div></div>
             </div>
 
             <!-- Today's Activity -->
@@ -528,11 +530,11 @@
                 <h2 class="section-title"><i class="fas fa-chart-line"></i> Today's Activity</h2>
                 <div class="activity-stats">
                     <div class="stat-item">
-                        <div class="stat-value" id="earnedToday">₦0</div>
+                        <div class="stat-value">₦0</div>
                         <div class="stat-label">Earned Today</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value" id="tasksDone">0/10</div>
+                        <div class="stat-value">0/10</div>
                         <div class="stat-label">Tasks Done</div>
                     </div>
                     <div class="stat-item">
@@ -547,8 +549,8 @@
                 <h2 class="section-title"><i class="fas fa-exchange-alt"></i> Recent Transactions</h2>
                 <div class="empty-state">
                     <div class="empty-icon"><i class="fas fa-receipt"></i></div>
-                    <p style="font-weight: 600;">No transactions yet</p>
-                    <p style="font-size:0.8rem; margin-top:8px;">Complete tasks or claim bonuses to see activity here</p>
+                    <p>No transactions yet</p>
+                    <p style="font-size:0.9rem; margin-top:8px;">Complete tasks or claim bonuses to see activity here</p>
                 </div>
             </div>
         </main>
@@ -562,19 +564,39 @@
         </nav>
     </div>
 
+    <!-- Dynamic Glassmorphic Activation Modal -->
+    <div class="modal-overlay" id="payModal">
+        <div class="modal-card">
+            <div class="modal-icon">
+                <i class="fas fa-unlock-keyhole"></i>
+            </div>
+            <h3 class="modal-title" id="modalTitle">Account Activation</h3>
+            <p class="modal-desc" id="modalDesc">To unlock and safely withdraw your welcome bonus, please complete your secure account activation via Flutterwave.</p>
+            
+            <!-- Manually selecting is completely removed here -->
+            <div class="modal-badge" id="modalBadge">Package: Detecting...</div>
+
+            <div class="modal-actions">
+                <button class="modal-btn-primary" id="btnConfirmPay">Acknowledge & Pay</button>
+                <button class="modal-btn-secondary" id="btnCancelPay">Maybe Later</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast -->
     <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
+        <i class="fas fa-check-circle" id="toastIcon"></i>
         <span id="toastMessage"></span>
     </div>
 
-    <!-- Firebase Compat SDKs -->
+    <!-- Firebase SDK (v10 Compatibility) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
-        // Initialize Firebase Config
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDB-5gCKldlrQVIfE7raHWRAVGar8BijCw",
             authDomain: "vestify-morrish.firebaseapp.com",
@@ -584,134 +606,198 @@
             appId: "1:312167700760:web:3dd4521601ca370d8ba66d",
             measurementId: "G-FC6L1N4T6H"
         };
-        
+
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const rtdb = firebase.database();
 
-        // Reactive UI State variables
-        let rawBalanceValue = 0;
-        let visible = true;
+        // Payment Link Map
+        const paymentLinks = {
+            'ELITE': 'https://flutterwave.com/pay/chvgi2amubsm',
+            'SUPREMO': 'https://flutterwave.com/pay/mpbp5fogl8cz',
+            'LEGEND': 'https://flutterwave.com/pay/lrzlco3xpwb5'
+        };
 
-        // Simple elegant toast function
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMessage').textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3200);
-        }
+        // Local Storage Fallback Data Structure
+        let activeUserObj = JSON.parse(localStorage.getItem('vestifyUser') || '{}');
+        let rawBonusValue = activeUserObj.packageBonus || '0';
 
-        // Apply LocalStorage instantly to avoid visual lags during page load
-        function loadFromLocalStorage() {
-            const userData = JSON.parse(localStorage.getItem('vestifyUser') || '{}');
-            const username = userData.username || 'Guest';
-            const packageName = userData.package || 'Not Selected';
-            const packagePrice = userData.packagePrice ? `₦${Number(userData.packagePrice).toLocaleString()}` : '—'; 
-            rawBalanceValue = userData.packageBonus || 0;
+        // Display States
+        let globalUsername = activeUserObj.username || 'Guest';
+        let globalPackage = activeUserObj.package || '';
+        let globalPrice = activeUserObj.packagePrice || '0';
 
-            updateDOM(username, packageName, packagePrice, rawBalanceValue);
-        }
-
-        // Central DOM Renderer
-        function updateDOM(username, packageName, packagePrice, balance, earnedToday = 0, tasksDone = "0/10") {
-            document.getElementById('usernameDisplay').textContent = `@${username.toLowerCase().replace(/\s+/g, '')}`;
-            document.getElementById('userInitial').textContent = username.charAt(0).toUpperCase();
-            document.getElementById('greeting').textContent = `Hey ${username.split(' ')[0] || 'there'}`;
-            document.getElementById('packageDisplay').textContent = `Package: ${packageName} (${packagePrice})`;
+        // Update UI View
+        function refreshUIElements() {
+            document.getElementById('usernameDisplay').textContent = `@${globalUsername.toLowerCase().replace(/\s+/g, '')}`;
+            document.getElementById('userInitial').textContent = globalUsername.charAt(0).toUpperCase();
+            document.getElementById('greeting').textContent = `Hey ${globalUsername.split(' ')[0] || 'there'}`;
             
-            // Handle masked balance logic correctly
-            if (visible) {
-                document.getElementById('packageBal').textContent = `₦${Number(balance).toLocaleString()}`;
-            } else {
-                document.getElementById('packageBal').textContent = '••••••';
-            }
-
-            document.getElementById('earnedToday').textContent = `₦${Number(earnedToday).toLocaleString()}`;
-            document.getElementById('tasksDone').textContent = tasksDone;
+            const pName = globalPackage ? globalPackage.toUpperCase() : 'Not Selected';
+            const formattedPrice = globalPrice && globalPrice !== '0' ? `₦${Number(globalPrice).toLocaleString()}` : '—';
+            document.getElementById('packageDisplay').textContent = `Package: ${pName} (${formattedPrice})`;
+            
+            updateDisplayedBalance();
         }
 
-        // Live Real-Time database listener from Firebase
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                // Read continuous live updates from user document matching register structural norms
-                db.collection('users').doc(user.uid).onSnapshot(doc => {
-                    if (doc.exists) {
-                        const firebaseData = doc.data();
-                        
-                        // Local storage sync backup
-                        localStorage.setItem('vestifyUser', JSON.stringify({
-                            username: firebaseData.username || firebaseData.fullName || 'User',
-                            package: firebaseData.package || 'Not Selected',
-                            packagePrice: firebaseData.packagePrice || 0,
-                            packageBonus: firebaseData.balance || firebaseData.packageBonus || 0
-                        }));
+        // Handle Balance Display (Hide/Show Toggle)
+        let visible = true;
+        function updateDisplayedBalance() {
+            const displayValue = rawBonusValue && rawBonusValue !== '0' ? `₦${Number(rawBonusValue).toLocaleString()}` : '₦0.00';
+            document.getElementById('packageBal').textContent = visible ? displayValue : '••••••';
+        }
 
-                        rawBalanceValue = firebaseData.balance || firebaseData.packageBonus || 0;
-                        const packagePriceFormatted = firebaseData.packagePrice ? `₦${Number(firebaseData.packagePrice).toLocaleString()}` : '—';
-
-                        updateDOM(
-                            firebaseData.username || firebaseData.fullName || 'User',
-                            firebaseData.package || 'Not Selected',
-                            packagePriceFormatted,
-                            rawBalanceValue,
-                            firebaseData.earnedToday || 0,
-                            firebaseData.tasksCompleted ? `${firebaseData.tasksCompleted}/10` : '0/10'
-                        );
-                    } else {
-                        // Document missing inside Firestore database collection fallback
-                        loadFromLocalStorage();
-                    }
-                }, error => {
-                    console.error("Firestore loading error: ", error);
-                    loadFromLocalStorage();
-                });
-            } else {
-                // Clear session or verify local context state
-                loadFromLocalStorage();
-                showToast("Please register or login to activate features.");
-                setTimeout(() => {
-                    window.location.href = 'register.html'; // Direct to your system registry path
-                }, 4000);
-            }
-        });
-
-        // Initialize state on page load from fast Cache
-        loadFromLocalStorage();
-
-        // Eye balance mask-unmask system
         document.getElementById('balanceEye').addEventListener('click', () => {
             visible = !visible;
-            if (visible) {
-                document.getElementById('packageBal').textContent = `₦${Number(rawBalanceValue).toLocaleString()}`;
-                document.getElementById('balanceEye').innerHTML = '<i class="fas fa-eye"></i>';
+            updateDisplayedBalance();
+            document.getElementById('balanceEye').innerHTML = visible ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        // Sync with Firebase User Data
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Check Firestore First
+                db.collection('users').doc(user.uid).get().then((doc) => {
+                    if (doc.exists) {
+                        applyDBData(doc.data());
+                    } else {
+                        fetchRTDBFallback(user.uid);
+                    }
+                }).catch(() => {
+                    fetchRTDBFallback(user.uid);
+                });
             } else {
-                document.getElementById('packageBal').textContent = '••••••';
-                document.getElementById('balanceEye').innerHTML = '<i class="fas fa-eye-slash"></i>';
+                refreshUIElements();
             }
         });
 
-        // Action Interactions
+        function fetchRTDBFallback(uid) {
+            rtdb.ref('users/' + uid).once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    applyDBData(snapshot.val());
+                } else {
+                    refreshUIElements();
+                }
+            }).catch(() => {
+                refreshUIElements();
+            });
+        }
+
+        function applyDBData(data) {
+            if (data) {
+                globalUsername = data.username || globalUsername;
+                globalPackage = data.package || globalPackage;
+                globalPrice = data.packagePrice || globalPrice;
+                rawBonusValue = data.packageBonus || rawBonusValue;
+                
+                // Keep local storage in sync
+                const updatedLocal = {
+                    ...activeUserObj,
+                    username: globalUsername,
+                    package: globalPackage,
+                    packagePrice: globalPrice,
+                    packageBonus: rawBonusValue
+                };
+                localStorage.setItem('vestifyUser', JSON.stringify(updatedLocal));
+                activeUserObj = updatedLocal;
+                
+                refreshUIElements();
+            }
+        }
+
+        // Toast Alert Utilities
+        function showToast(msg, isSuccess = true) {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            document.getElementById('toastMessage').textContent = msg;
+            
+            if (isSuccess) {
+                icon.className = "fas fa-check-circle";
+                toast.style.borderColor = "var(--gold)";
+            } else {
+                icon.className = "fas fa-circle-exclamation";
+                toast.style.borderColor = "#ff4d4d";
+            }
+            
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        // Popup Actions & Interactions (Dropdown Selector has been removed)
+        const payModal = document.getElementById('payModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalBadge = document.getElementById('modalBadge');
+        const btnConfirmPay = document.getElementById('btnConfirmPay');
+        let currentTargetPaymentURL = "";
+
+        function openActivationModal(type = "claim") {
+            const matchedPackage = globalPackage ? globalPackage.toUpperCase().trim() : "";
+            
+            if (type === "claim") {
+                modalTitle.textContent = "Daily Claims Locked";
+                modalDesc.textContent = "You need to activate your premium pack before claiming your daily compounding earnings.";
+            } else {
+                modalTitle.textContent = "Withdraw Bonus";
+                modalDesc.textContent = "Ready to withdraw your sign-up welcome bonus? Complete your profile verification to unlock immediate instant payouts.";
+            }
+
+            // Checks the user's mapped plan directly
+            if (matchedPackage && paymentLinks[matchedPackage]) {
+                modalBadge.textContent = `Package: ${matchedPackage}`;
+                currentTargetPaymentURL = paymentLinks[matchedPackage];
+                btnConfirmPay.disabled = false;
+                btnConfirmPay.style.opacity = "1";
+            } else {
+                // Safe handling in case of legacy profiles or slow syncs
+                modalBadge.textContent = "Package: Not Detected";
+                modalDesc.textContent = "We couldn't detect an active package registration on this account. Please log out and sign up again.";
+                currentTargetPaymentURL = "#";
+                btnConfirmPay.disabled = true;
+                btnConfirmPay.style.opacity = "0.5";
+            }
+
+            payModal.classList.add('active');
+        }
+
         document.getElementById('claimBtn').addEventListener('click', (e) => {
             e.preventDefault();
-            showToast("Syncing database... Checking daily task milestones");
-            setTimeout(() => {
-                window.location.href = 'payment.html';
-            }, 1200);
+            openActivationModal("claim");
         });
 
-        document.getElementById('activateBtn').addEventListener('click', () => {
-            showToast("Transferring bonus... Redirecting to secure portal");
-            setTimeout(() => { 
-                window.location.href = 'payment.html'; 
-            }, 1200);
+        document.getElementById('activateBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            openActivationModal("withdraw");
         });
 
-        // Loop all custom cards
+        document.getElementById('btnCancelPay').addEventListener('click', () => {
+            payModal.classList.remove('active');
+        });
+
+        btnConfirmPay.addEventListener('click', () => {
+            if (currentTargetPaymentURL && currentTargetPaymentURL !== "#") {
+                showToast("Opening Secure Checkout Gateway...");
+                payModal.classList.remove('active');
+                setTimeout(() => {
+                    window.location.href = currentTargetPaymentURL;
+                }, 1000);
+            } else {
+                showToast("Invalid checkout routing. Please check your account state.", false);
+            }
+        });
+
+        // Quick Actions (Interactions)
         document.querySelectorAll('.action-card').forEach(card => {
             card.addEventListener('click', () => {
-                showToast(`Opening ${card.querySelector('.action-title').textContent}...`);
+                const title = card.querySelector('.action-title').textContent;
+                showToast(`Launching ${title} feature...`);
             });
         });
+
+        // Initialize display
+        refreshUIElements();
     </script>
 </body>
 </html>
