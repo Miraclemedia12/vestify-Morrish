@@ -571,7 +571,7 @@
                 <i class="fas fa-unlock-keyhole"></i>
             </div>
             <h3 class="modal-title" id="modalTitle">Account Activation</h3>
-            <p class="modal-desc" id="modalDesc">To unlock and safely withdraw your welcome bonus, please complete your secure account activation via Flutterwave.</p>
+            <p class="modal-desc" id="modalDesc">To unlock and safely withdraw your welcome bonus, please complete your secure account activation.</p>
             
             <!-- Manually selecting is completely removed here -->
             <div class="modal-badge" id="modalBadge">Package: Detecting...</div>
@@ -613,11 +613,11 @@
         const db = firebase.firestore();
         const rtdb = firebase.database();
 
-        // Payment Link Map
+        // Payment Link Map (Updated to redirect locally to payment.html with plan tracking)
         const paymentLinks = {
-            'ELITE': 'https://flutterwave.com/pay/chvgi2amubsm',
-            'SUPREMO': 'https://flutterwave.com/pay/mpbp5fogl8cz',
-            'LEGEND': 'https://flutterwave.com/pay/lrzlco3xpwb5'
+            'ELITE': 'payment.html?plan=ELITE',
+            'SUPREMO': 'payment.html?plan=SUPREMO',
+            'LEGEND': 'payment.html?plan=LEGEND'
         };
 
         // Local Storage Fallback Data Structure
@@ -744,13 +744,13 @@
                 modalDesc.textContent = "Ready to withdraw your sign-up welcome bonus? Complete your profile verification to unlock immediate instant payouts.";
             } else {
                 modalTitle.textContent = `${type} Locked`;
-                modalDesc.textContent = `To unlock the premium ${type} system, please complete your secure account activation via Flutterwave.`;
+                modalDesc.textContent = `To unlock the premium ${type} system, please complete your secure account activation.`;
             }
 
-            // Checks the user's mapped plan directly
+            // Checks the user's mapped plan directly and appends dynamic amount parameter
             if (matchedPackage && paymentLinks[matchedPackage]) {
                 modalBadge.textContent = `Package: ${matchedPackage}`;
-                currentTargetPaymentURL = paymentLinks[matchedPackage];
+                currentTargetPaymentURL = `${paymentLinks[matchedPackage]}&amount=${encodeURIComponent(globalPrice)}`;
                 btnConfirmPay.disabled = false;
                 btnConfirmPay.style.opacity = "1";
             } else {
