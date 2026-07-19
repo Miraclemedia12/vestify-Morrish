@@ -385,9 +385,9 @@
         db.collection('admin').doc('paymentSettings').onSnapshot((doc) => {
             if (doc.exists) {
                 const data = doc.data();
-                document.getElementById('bankName').textContent = data.bankName || 'Not Set';
-                document.getElementById('accNumber').textContent = data.accountNumber || '0000000000';
-                document.getElementById('accName').textContent = data.accountName || 'Not Set';
+                document.getElementById('bankName').textContent = data.bankName || 'KUDA';
+                document.getElementById('accNumber').textContent = data.accountNumber || '3004079780';
+                document.getElementById('accName').textContent = data.accountName || 'MORRISH M ENTERPRISE- Vestifyweb';
                 
                 // Update redirect link on the fly
                 if (data.telegramLink) {
