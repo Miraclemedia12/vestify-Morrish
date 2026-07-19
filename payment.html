@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vestify – Secure Payment Gateway</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #FFD700;
+            --gold-glow: #ffed4e;
+            --bg: #07020d;
+            --dark: #040108;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 215, 0, 0.15);
+            --text: #ffffff;
+            --text-light: rgba(255, 255, 255, 0.75);
+            --gradient-gold: linear-gradient(90deg, rgba(207, 162, 53, 1) 0%, rgba(255, 255, 255, 1) 29%, rgba(207, 162, 53, 1) 67%, rgba(255, 255, 255, 1) 100%);
+            --danger: #ff4d4d;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        /* Floating Orbs */
+        .bg-orbs {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,0.08), transparent);
+            animation: float 35s infinite linear;
+            opacity: 0.25;
+        }
+        .orb:nth-child(1) { width: 400px; height: 400px; top: -5%; left: -10%; }
+        .orb:nth-child(2) { width: 500px; height: 500px; bottom: -10%; right: -10%; animation-duration: 40s; }
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(60px, -40px) rotate(180deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        .payment-container {
+            width: 100%;
+            max-width: 460px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        /* Header Window */
+        .payment-header {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .payment-header h1 {
+            font-size: 1.6rem;
+            color: var(--gold);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .payment-header p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* Glassmorphic Cards */
+        .premium-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 25px rgba(255, 215, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Timer Block styling */
+        .timer-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: rgba(255, 77, 77, 0.05);
+            border: 1px solid rgba(255, 77, 77, 0.2);
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 5px;
+            transition: var(--transition);
+        }
+        .timer-wrapper.warning {
+            background: rgba(255, 77, 77, 0.15);
+            border-color: var(--danger);
+            animation: pulse-danger 1.5s infinite alternate;
+        }
+        @keyframes pulse-danger {
+            0% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4); }
+            100% { box-shadow: 0 0 15px 5px rgba(255, 77, 77, 0.2); }
+        }
+        .timer-icon {
+            font-size: 1.3rem;
+            color: var(--danger);
+        }
+        .timer-text {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        .countdown {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--danger);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Details info rows */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label {
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .info-value.amount-highlight {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+        .info-value.plan-highlight {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 4px 12px;
+            border-radius: 8px;
+            color: var(--gold-glow);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Bank Panel Structure */
+        .bank-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 215, 0, 0.3);
+            border-radius: 16px;
+            padding: 18px;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .acc-number-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .account-num {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--gold);
+        }
+        .copy-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+            transition: var(--transition);
+        }
+        .copy-btn:hover {
+            color: var(--gold);
+            transform: scale(1.15);
+        }
+
+        /* Action Buttons */
+        .btn-submit {
+            background: var(--gradient-gold);
+            color: #000;
+            border: none;
+            padding: 18px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(255,215,0,0.3);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            box-shadow: 0 0 45px rgba(255,215,0,0.5);
+            transform: translateY(-2px);
+        }
+
+        .alert-footer-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+            padding: 0 10px;
+        }
+
+        /* Toast Component */
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(7,2,13,0.96);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--gold);
+            border-radius: 50px;
+            padding: 14px 28px;
+            color: var(--text);
+            font-weight: 500;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 4000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-orbs">
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
+    <div class="payment-container">
+        <!-- Header View -->
+        <div class="payment-header">
+            <h1>Secure Checkout</h1>
+            <p>Complete your manual transfer transaction details below</p>
+        </div>
+
+        <!-- Dynamic Live Countdown Tracker -->
+        <div class="timer-wrapper" id="timerContainer">
+            <i class="fas fa-clock-cell timer-icon"><i class="fas fa-clock"></i></i>
+            <span class="timer-text" id="statusLabel">Session expires in:</span>
+            <span class="countdown" id="timerDisplay">10:00</span>
+        </div>
+
+        <!-- Pricing Invoice Summary Block -->
+        <div class="premium-card">
+            <div class="info-row">
+                <span class="info-label">Selected System Plan</span>
+                <span class="info-value plan-highlight" id="displayPlan">DETECTING...</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Exact Amount Due</span>
+                <span class="info-value amount-highlight" id="displayAmount">₦0.00</span>
+            </div>
+        </div>
+
+        <!-- Bank Credentials Display Block -->
+        <div class="premium-card">
+            <h3 style="font-size: 1.05rem; font-weight: 600; color: var(--gold); margin-bottom: 12px;">
+                <i class="fas fa-university"></i> Transfer Settlement Instructions
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--text-light); margin-bottom: 14px;">
+                Please transfer the exact invoice amount displayed above into the corporate vault account specified below:
+            </p>
+
+            <div class="bank-box">
+                <div class="info-row" style="padding: 2px 0;">
+                    <span class="info-label">Settlement Bank</span>
+                    <span class="info-value" id="bankName" style="font-size:0.95rem;">Loading...</span>
+                </div>
+                
+                <div class="acc-number-row">
+                    <span class="account-num" id="accNumber">----------</span>
+                    <button class="copy-btn" id="copyAccBtn" title="Copy Account Number">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
+
+                <div class="info-row" style="padding: 2px 0; border-bottom: none;">
+                    <span class="info-label">Beneficiary Account Name</span>
+                    <span class="info-value" id="accName" style="font-size:0.95rem;">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit & Process Actions -->
+        <button class="btn-submit" id="btnPaid">
+            <i class="fab fa-telegram-plane"></i> I Have Made Payment
+        </button>
+
+        <p class="alert-footer-text">
+            Ensure you screenshot or save your transaction receipt file. Clicking the verification button securely opens support synchronization portals.
+        </p>
+    </div>
+
+    <!-- Alert Messaging System -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle" id="toastIcon"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Firebase SDK Setup (Matches Dashboard Config) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase Configuration (Synced from dashboard project parameters)[cite: 1]
+        const firebaseConfig = {
+            apiKey: "AIzaSyDB-5gCKldlrQVIfE7raHWRAVGar8BijCw",
+            authDomain: "vestify-morrish.firebaseapp.com",
+            projectId: "vestify-morrish",
+            storageBucket: "vestify-morrish.firebasestorage.app",
+            messagingSenderId: "312167700760",
+            appId: "1:312167700760:web:3dd4521601ca370d8ba66d",
+            measurementId: "G-FC6L1N4T6H"
+        };
+
+        // Initialize App Connection
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Admin Controlled State Variables
+        let dynamicTelegramRedirect = "http://t.me/morrishmedia"; // Admin fallback dashboard variable
+
+        // 1. Fetch Plan Parameters from URL Strings
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlPlan = urlParams.get('plan') || 'ELITE';
+        const urlAmount = urlParams.get('amount') || '0';
+
+        // Render URL values right into the UI
+        document.getElementById('displayPlan').textContent = urlPlan.toUpperCase();
+        document.getElementById('displayAmount').textContent = urlAmount && urlAmount !== '0' ? `₦${Number(urlAmount).toLocaleString()}` : '₦0.00';
+
+        // 2. Setup Real-time Listener for Real-Time Account Changes via Admin Settings
+        // This listens to a collection called 'admin' and document 'paymentSettings'
+        db.collection('admin').doc('paymentSettings').onSnapshot((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                document.getElementById('bankName').textContent = data.bankName || 'Not Set';
+                document.getElementById('accNumber').textContent = data.accountNumber || '0000000000';
+                document.getElementById('accName').textContent = data.accountName || 'Not Set';
+                
+                // Update redirect link on the fly
+                if (data.telegramLink) {
+                    dynamicTelegramRedirect = data.telegramLink;
+                }
+            } else {
+                console.log("No remote config found. Make sure collection 'admin' contains document 'paymentSettings'.");
+            }
+        }, (error) => {
+            console.error("Firebase real-time synchronization error: ", error);
+        });
+
+        // 3. Ten-Minute Absolute Countdown Timer Core Engine
+        let remainingTime = 10 * 60; // 10 minutes computed to absolute integer seconds
+        const timerDisplay = document.getElementById('timerDisplay');
+        const timerContainer = document.getElementById('timerContainer');
+        const statusLabel = document.getElementById('statusLabel');
+
+        const countdownInterval = setInterval(() => {
+            let minutes = Math.floor(remainingTime / 60);
+            let seconds = remainingTime % 60;
+
+            // Enforce double digit text structures
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            timerDisplay.textContent = `${minutes}:${seconds}`;
+
+            // Add aggressive warning pulses when remaining threshold drops below 2 minutes
+            if (remainingTime <= 120) {
+                timerContainer.classList.add('warning');
+            }
+
+            if (remainingTime <= 0) {
+                clearInterval(countdownInterval);
+                statusLabel.textContent = "Session Expired! Redirecting...";
+                timerDisplay.textContent = "00:00";
+                document.getElementById('btnPaid').disabled = true;
+                
+                // Route automatically to administrative channels on expiry timeout
+                setTimeout(() => {
+                    window.location.href = dynamicTelegramRedirect;
+                }, 1500);
+            }
+
+            remainingTime--;
+        }, 1000);
+
+        // 4. Toast Utility Messages
+        function displaySystemToast(text, statusSuccess = true) {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            document.getElementById('toastMessage').textContent = text;
+            
+            if (statusSuccess) {
+                icon.className = "fas fa-check-circle";
+                toast.style.borderColor = "var(--gold)";
+            } else {
+                icon.className = "fas fa-circle-exclamation";
+                toast.style.borderColor = "var(--danger)";
+            }
+            
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // 5. Account Clipboard Action Hook
+        document.getElementById('copyAccBtn').addEventListener('click', () => {
+            const targetAccountNumberText = document.getElementById('accNumber').textContent;
+            if(targetAccountNumberText && targetAccountNumberText !== "----------" && targetAccountNumberText !== "0000000000") {
+                navigator.clipboard.writeText(targetAccountNumberText).then(() => {
+                    displaySystemToast("Account number copied successfully!");
+                }).catch(() => {
+                    displaySystemToast("Failed to copy text asset.", false);
+                });
+            }
+        });
+
+        // 6. Verification Button Redirect Engine
+        document.getElementById('btnPaid').addEventListener('click', () => {
+            displaySystemToast("Connecting to Verification Channels...");
+            setTimeout(() => {
+                window.location.href = dynamicTelegramRedirect;
+            }, 800);
+        });
+    </script>
+</body>
+</html>
